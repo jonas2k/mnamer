@@ -104,6 +104,7 @@ class MetadataMovie(Metadata):
 
     name: str = None
     year: int = None
+    release_name: str = None
     id_imdb: str = None
     id_tmdb: Union[int, str] = None
     media: MediaType = MediaType.MOVIE

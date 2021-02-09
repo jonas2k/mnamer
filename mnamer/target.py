@@ -122,6 +122,7 @@ class Target:
 
     def _parse(self, file_path: PurePath):
         path_data = {}
+        path_data["release_name"] = file_path.parent.name
         options = {"type": self._settings.media}
         raw_data = dict(guessit(str(file_path), options))
         if isinstance(raw_data.get("season"), list):
@@ -180,6 +181,7 @@ class Target:
         if self.metadata.media is MediaType.MOVIE:
             self.metadata.name = path_data.get("title")
             self.metadata.year = path_data.get("year")
+            self.metadata.release_name = path_data.get("release_name")
         elif self.metadata.media is MediaType.EPISODE:
             self.metadata.date = path_data.get("date")
             self.metadata.episode = path_data.get("episode")
