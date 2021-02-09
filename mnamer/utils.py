@@ -3,7 +3,7 @@
 import json
 import re
 from datetime import date, datetime
-from os import walk
+from os import walk, listdir
 from os.path import (
     exists,
     expanduser,
@@ -12,6 +12,7 @@ from os.path import (
     splitdrive,
     splitext,
 )
+from shutil import rmtree
 from pathlib import Path, PurePath
 from typing import Any, Callable, Dict, Generator, List, Optional, Tuple, Union
 from unicodedata import normalize
@@ -533,3 +534,12 @@ def year_range_parse(
     if not dash:
         end = start
     return start - tolerance, end + tolerance
+
+
+def remove_empty_directory(path: Path, test: bool) -> bool:
+    if not listdir(path):
+        if not test:
+            rmtree(path)
+        return True
+    else:
+        return False
