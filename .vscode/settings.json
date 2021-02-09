@@ -21,5 +21,9 @@
   "python.linting.pylintArgs": [
     "--disable",
     "protected-access,bare-except,expression-not-assigned,line-too-long,missing-module-docstring,unused-wildcard-import,missing-function-docstring,attribute-defined-outside-init"
-  ]
+  ],
+  "python.pythonPath": ".venv\\Scripts\\python.exe",
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true
 }

@@ -13,7 +13,12 @@ from mnamer.exceptions import (
 from mnamer.setting_store import SettingStore
 from mnamer.target import Target
 from mnamer.types import MessageType
-from mnamer.utils import clear_cache, get_filesize, is_subtitle
+from mnamer.utils import (
+    clear_cache,
+    get_filesize,
+    is_subtitle,
+    remove_empty_directory,
+)
 
 
 class Frontend(ABC):
@@ -151,6 +156,7 @@ class Cli(Frontend):
                 continue
 
             self._rename_and_move_file(target)
+            self._remove_empty_source_directory(target)
 
     def _announce_file(self, target: Target):
         media_type = target.metadata.media.value.title()
@@ -193,7 +199,32 @@ class Cli(Frontend):
             tty.msg("OK!", MessageType.SUCCESS)
             self.success_count += 1
 
-    def _report_results(self) -> None:
+    def _remove_empty_source_directory(self, target: Target):
+        if self.settings.remove_empty_source_directory:
+            try:
+                directory_removed = remove_empty_directory(
+                    target.source.parent, self.settings.test
+                )
+                if directory_removed:
+                    tty.msg(
+                        "removed empty source directory "
+                        + str(target.source.parent.absolute()),
+                        MessageType.SUCCESS,
+                    )
+                else:
+                    tty.msg(
+                        "skipped removal of non empty source directory "
+                        + str(target.source.parent.absolute()),
+                        MessageType.SUCCESS,
+                    )
+            except:
+                tty.msg(
+                    "failed to remove empty source directory "
+                    + str(target.source.parent.absolute()),
+                    MessageType.ERROR,
+                )
+
+    def _report_results(self):
         if self.success_count == 0:
             message_type = MessageType.ERROR
         elif self.success_count == self.total_count:
